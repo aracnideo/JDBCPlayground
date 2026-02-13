@@ -11,7 +11,6 @@ import model.entities.Department;
 import model.entities.Seller;
 import repository.DepartmentRepository;
 import repository.SellerRepository;
-import service.DepartmentService;
 import service.SellerService;
 
 public class SellerMenu {
@@ -43,6 +42,7 @@ public class SellerMenu {
 				break;
 			case 2:
 				System.out.println("Option selected: FINDBYID SELLER");
+				findById();
 				break;
 			case 3:
 				System.out.println("Option selected: FINDALL SELLER");
@@ -138,6 +138,32 @@ public class SellerMenu {
 				System.out.println(seller.toString());
 			}
 			sc.nextLine();
+			waitForInput();
+		} catch (DbException e) {
+			System.out.println("Database error: " + e.getMessage());
+		} finally {
+			DB.closeConnection();
+		}
+	}
+	
+	public void findById() {
+		Connection conn = null;
+		System.out.println("Enter Seller Id: ");
+		int id = sc.nextInt();
+		sc.nextLine();
+		try {
+			conn = DB.getConnection();
+			SellerRepository repository = new SellerRepository(conn);
+			SellerService service = new SellerService(repository);
+
+			Seller seller = service.findById(id);
+
+			if (seller != null) {
+				System.out.println("~~ Seller Found ~~");
+				System.out.println(seller.toString());
+			} else {
+				System.out.println("Seller not found.");
+			}
 			waitForInput();
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());

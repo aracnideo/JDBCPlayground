@@ -52,4 +52,7 @@ public class SellerService {
 		return repository.findAll();
 	}
 
+	public Seller findById(int id) {
+		return repository.findById(id);
+	}
 }

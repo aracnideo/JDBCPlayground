@@ -80,4 +80,35 @@ public class SellerRepository {
 			DB.closeResultSet(rs);
 		}
 	}
+
+	public Seller findById(int id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String sql = "SELECT s.Id, s.Name AS SellerName, s.Email, s.BirthDate, s.BaseSalary, d.Id AS DepartmentId, d.Name AS DepartmentName FROM seller s JOIN department d ON s.DepartmentId = d.Id WHERE s.id = ?";
+
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, id);
+			try {
+				rs = st.executeQuery();
+				if (rs.next()) {
+					Department department = new Department(rs.getInt("DepartmentId"), rs.getString("DepartmentName"));
+					LocalDate birthDate = rs.getDate("BirthDate").toLocalDate();
+					Seller seller = new Seller(rs.getString("SellerName"), rs.getString("Email"), birthDate,
+							rs.getDouble("BaseSalary"), department);
+					seller.setId(rs.getInt("Id"));
+					return seller;
+				}
+			} catch (SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+
+		} catch (SQLException e) {
+			throw new DbException("Error fetching seller by id: " + e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+		return null;
+	}
 }
