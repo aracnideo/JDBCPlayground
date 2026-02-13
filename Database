@@ -18,15 +18,16 @@ CREATE TABLE seller (
 );
 
 INSERT INTO department (Name) VALUES 
-  ('Computers'),
   ('Electronics'),
-  ('Fashion'),
-  ('Books');
+  ('Sports'),
+  ('Books'),
+  ('Health');
 
 INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES 
-  ('Bob Brown','bob@gmail.com','1998-04-21 00:00:00',1000,1),
-  ('Maria Green','maria@gmail.com','1979-12-31 00:00:00',3500,2),
-  ('Alex Grey','alex@gmail.com','1988-01-15 00:00:00',2200,1),
-  ('Martha Red','martha@gmail.com','1993-11-30 00:00:00',3000,4),
-  ('Dirceu Black','black@gmail.com','2000-01-09 00:00:00',4000,3),
-  ('Alex Pink','apink@gmail.com','1997-03-04 00:00:00',3000,2);
+  ('John Silver','john.silver@gmail.com','1985-07-19 00:00:00',2800,1),
+  ('Laura White','laura.white@gmail.com','1992-05-23 00:00:00',3200,2),
+  ('Carlos Blue','carlos.blue@gmail.com','1980-09-10 00:00:00',4500,3),
+  ('Ana Yellow','ana.yellow@gmail.com','1995-02-14 00:00:00',2700,4),
+  ('Bruno Orange','bruno.orange@gmail.com','1987-12-05 00:00:00',3900,1),
+  ('Sofia Purple','sofia.purple@gmail.com','1999-08-28 00:00:00',3100,3),
+  ('Fabrizio Gray','fabrizio@gmail.com','1989-01-01 00:00:00',3500,2);
