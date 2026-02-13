@@ -34,19 +34,23 @@ public class DepartmentMenu {
 
 			switch (option) {
 			case 1:
+				System.out.println("Option selected: INSERT DEPARTMENT");
 				insert();
 				break;
 			case 2:
+				System.out.println("Option selected: FINDBYID DEPARTMENT");
 				findById();
 				break;
 			case 3:
+				System.out.println("Option selected: FINDALL DEPARTMENT");
 				findAll();
 				break;
 			case 4:
+				System.out.println("Option selected: UPDATE DEPARTMENT");
 				update();
 				break;
 			case 5:
-				System.out.println("Deleção em andamento");
+				System.out.println("Option selected: DELETE DEPARTMENT");
 				break;
 			case 6:
 				System.out.println("Returning to Main Menu...");

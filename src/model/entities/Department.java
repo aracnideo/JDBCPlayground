@@ -9,7 +9,6 @@ public class Department {
 	}
 
 	public Department(Integer id, String name) {
-		// Ver questao do ID
 		this.id = id;
 		this.name = name;
 	}

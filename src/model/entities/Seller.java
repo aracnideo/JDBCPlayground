@@ -20,7 +20,6 @@ public class Seller {
 		this.birthDate = birthDate;
 		this.baseSalary = baseSalary;
 		this.department = department;
-		// Fazer Id
 	}
 	
 	public Integer getId() {

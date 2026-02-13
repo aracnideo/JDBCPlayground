@@ -18,7 +18,6 @@ public class DepartmentService {
 		if (department == null) {
 			throw new IllegalArgumentException("Department cannot be null.");
 		}
-
 		if (department.getName() == null || department.getName().trim().isEmpty()) {
 			throw new IllegalArgumentException("Department name cannot be empty.");
 		}
@@ -26,6 +25,9 @@ public class DepartmentService {
 	}
 
 	public void update(Department department) {
+		if (department.getName() == null || department.getName().trim().isEmpty()) {
+			throw new IllegalArgumentException("Department name cannot be empty.");
+		}
 		repository.update(department);
 	}
 
