@@ -51,6 +51,7 @@ public class DepartmentMenu {
 				break;
 			case 5:
 				System.out.println("Option selected: DELETE DEPARTMENT");
+				delete();
 				break;
 			case 6:
 				System.out.println("Returning to Main Menu...");
@@ -60,10 +61,10 @@ public class DepartmentMenu {
 			}
 		}
 	}
-	
+
 	private void waitForInput() {
 		System.out.println("Press Enter to continue...");
-	    sc.nextLine();
+		sc.nextLine();
 	}
 
 	private void insert() {
@@ -115,7 +116,7 @@ public class DepartmentMenu {
 	}
 
 	private void findAll() {
-		// ReadAll Department
+		// FindAll Department
 		Connection conn = null;
 		try {
 			conn = DB.getConnection();
@@ -138,6 +139,7 @@ public class DepartmentMenu {
 	}
 
 	public void findById() {
+		// FindById Department
 		Connection conn = null;
 		System.out.println("Enter Deparment Id: ");
 		int id = sc.nextInt();
@@ -156,6 +158,27 @@ public class DepartmentMenu {
 				System.out.println("Department not found.");
 			}
 			waitForInput();
+		} catch (DbException e) {
+			System.out.println("Database error: " + e.getMessage());
+		} finally {
+			DB.closeConnection();
+		}
+	}
+
+	public void delete() {
+		// Delete Department
+		Connection conn = null;
+		System.out.println("Enter Deparment Id: ");
+		int id = sc.nextInt();
+		sc.nextLine();
+
+		try {
+			conn = DB.getConnection();
+			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
+			DepartmentService departmentService = new DepartmentService(departmentRepository);
+//			departmentService.delete(id);
+			
+
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
