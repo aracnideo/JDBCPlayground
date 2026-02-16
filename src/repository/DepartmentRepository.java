@@ -35,18 +35,15 @@ public class DepartmentRepository {
 					int id = rs.getInt(1);
 					department.setId(id);
 				}
-
 				DB.closeResultSet(rs);
 			}
 			if (rowsAffected == 0) {
 				throw new SQLException("No rows affected");
 			}
-
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
 			DB.closeStatement(st);
-
 		}
 	}
 
@@ -107,7 +104,6 @@ public class DepartmentRepository {
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
 			}
-
 		} catch (SQLException e) {
 			throw new DbException("Error fetching department by id: " + e.getMessage());
 		} finally {
@@ -125,7 +121,7 @@ public class DepartmentRepository {
 			st.setInt(1, id);
 			int rowsAffected = st.executeUpdate();
 			if (rowsAffected == 0) {
-				throw new SQLException("No rows affected. Id not found.");
+				throw new DbException("No rows affected. Id not found.");
 			}
 		} catch (SQLException e) {
 			throw new DbIntegrityException(e.getMessage());
