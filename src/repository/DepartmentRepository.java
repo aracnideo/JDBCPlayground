@@ -125,7 +125,7 @@ public class DepartmentRepository {
 			st.setInt(1, id);
 			int rowsAffected = st.executeUpdate();
 			if (rowsAffected == 0) {
-				throw new SQLException("No rows affected. Id not found exist.");
+				throw new SQLException("No rows affected. Id not found.");
 			}
 		} catch (SQLException e) {
 			throw new DbIntegrityException(e.getMessage());

@@ -136,10 +136,10 @@ public class DepartmentMenu {
 		int id = InputUtils.readInt(sc, "Enter deparment Id: ");
 		try {
 			conn = DB.getConnection();
-			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
-			DepartmentService departmentService = new DepartmentService(departmentRepository);
+			DepartmentRepository repository = new DepartmentRepository(conn);
+			DepartmentService service = new DepartmentService(repository);
 
-			Department department = departmentService.findById(id);
+			Department department = service.findById(id);
 
 			if (department != null) {
 				System.out.println("~~ Department Found ~~");
@@ -162,9 +162,9 @@ public class DepartmentMenu {
 
 		try {
 			conn = DB.getConnection();
-			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
-			DepartmentService departmentService = new DepartmentService(departmentRepository);
-			departmentService.delete(id);
+			DepartmentRepository repository = new DepartmentRepository(conn);
+			DepartmentService service = new DepartmentService(repository);
+			service.delete(id);
 			System.out.println("Department deleted successfully.");
 		} catch (DbIntegrityException e) {
 			System.out.println("Cannot delete department: it has associated sellers.");
