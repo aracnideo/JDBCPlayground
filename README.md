@@ -1,4 +1,4 @@
-# JDBC Project
+# JDBCPlayground
 
 This project was developed as part of my studies in Java Database Connectivity (JDBC).  
 It demonstrates a complete CRUD implementation using Java and MySQL, following clean architecture principles.
