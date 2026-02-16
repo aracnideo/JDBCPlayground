@@ -66,7 +66,7 @@ public class Seller {
 		return department;
 	}
 
-	public void setDepartmentId(Department department) {
+	public void setDepartment(Department department) {
 		this.department = department;
 	}
 

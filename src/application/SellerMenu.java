@@ -52,9 +52,11 @@ public class SellerMenu {
 				break;
 			case 4:
 				System.out.println("Option selected: UPDATE SELLER");
+				update();
 				break;
 			case 5:
 				System.out.println("Option selected: DELETE SELLER");
+				delete();
 				break;
 			case 6:
 				System.out.println("Returning to Main Menu...");
@@ -73,7 +75,6 @@ public class SellerMenu {
 			conn = DB.getConnection();
 			String name = InputUtils.readNonEmptyString(sc, "Enter the name of the new seller: ");
 			String email = InputUtils.readNonEmptyString(sc, "Enter the email of the new seller: ");
-
 			LocalDate birthDate = null;
 			boolean validBirthDate = false;
 			while (!validBirthDate) {
@@ -86,13 +87,10 @@ public class SellerMenu {
 					System.out.println("Invalid date format. Use yyyy-MM-dd.");
 				}
 			}
-
 			double baseSalary = InputUtils.readDouble(sc, "Enter the base salary of the new seller: ");
-
 			Department department = null;
 			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
 			DepartmentService departmentService = new DepartmentService(departmentRepository);
-
 			while (department == null) {
 				int departmentId = InputUtils.readInt(sc, "Enter the department ID of the new seller: ");
 				department = departmentService.findById(departmentId);
@@ -100,12 +98,9 @@ public class SellerMenu {
 					System.out.println("Department Id not found. Please try again.");
 				}
 			}
-
 			Seller seller = new Seller(name, email, birthDate, baseSalary, department);
-
 			SellerRepository repository = new SellerRepository(conn);
 			SellerService service = new SellerService(repository);
-
 			service.insert(seller);
 			System.out.println("Seller inserted successfully! New Id: " + seller.getId());
 			InputUtils.waitForEnter(sc);
@@ -123,9 +118,7 @@ public class SellerMenu {
 			conn = DB.getConnection();
 			SellerRepository repository = new SellerRepository(conn);
 			SellerService service = new SellerService(repository);
-
 			List<Seller> sellers = service.findAll();
-
 			System.out.println("~~ Sellers ~~");
 			for (Seller seller : sellers) {
 				System.out.println(seller.toString());
@@ -147,9 +140,7 @@ public class SellerMenu {
 			conn = DB.getConnection();
 			SellerRepository repository = new SellerRepository(conn);
 			SellerService service = new SellerService(repository);
-
 			Seller seller = service.findById(id);
-
 			if (seller != null) {
 				System.out.println("~~ Seller Found ~~");
 				System.out.println(seller.toString());
@@ -176,6 +167,67 @@ public class SellerMenu {
 			System.out.println("Seller deleted successfully.");
 		} catch (DbIntegrityException e) {
 			System.out.println("Integrity error: " + e.getMessage());
+		} catch (DbException e) {
+			System.out.println("Database error: " + e.getMessage());
+		} finally {
+			DB.closeConnection();
+		}
+	}
+
+	public void update() {
+		// Update Seller
+		Connection conn = null;
+		int id = InputUtils.readInt(sc, "Enter seller Id: ");
+		try {
+			conn = DB.getConnection();
+			SellerRepository repository = new SellerRepository(conn);
+			SellerService service = new SellerService(repository);
+			Seller seller = service.findById(id);
+			if (seller == null) {
+				System.out.println("Seller not found.");
+				return;
+			}
+			System.out.println("Current data:");
+			System.out.println(seller);
+			System.out.println("\nWhat do you want to update?");
+			System.out.println("1 - Name");
+			System.out.println("2 - Email");
+			System.out.println("3 - Birth Date");
+			System.out.println("4 - Base Salary");
+			System.out.println("5 - Department");
+			int option = InputUtils.readInt(sc, "Choose an option: ");
+			switch (option) {
+			case 1:
+				String name = InputUtils.readNonEmptyString(sc, "Enter new name: ");
+				seller.setName(name);
+				break;
+			case 2:
+				String email = InputUtils.readNonEmptyString(sc, "Enter new email: ");
+				seller.setEmail(email);
+				break;
+			case 3:
+				LocalDate birthDate = InputUtils.readDate(sc, "Enter new birth date (yyyy-MM-dd): ");
+				seller.setBirthDate(birthDate);
+				break;
+			case 4:
+				double salary = InputUtils.readDouble(sc, "Enter new base salary: ");
+				seller.setBaseSalary(salary);
+				break;
+			case 5:
+				int departmentId = InputUtils.readInt(sc, "Enter new department Id: ");
+				Department department = new DepartmentRepository(conn).findById(departmentId);
+				if (department == null) {
+					System.out.println("Department not found.");
+					return;
+				}
+				seller.setDepartment(department);
+				break;
+			}
+			service.update(seller);
+			Seller updatedSeller = service.findById(seller.getId());
+			System.out.println("Seller updated successfully.");
+			System.out.println(updatedSeller);
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {

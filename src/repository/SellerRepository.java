@@ -1,6 +1,7 @@
 package repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,9 +35,7 @@ public class SellerRepository {
 			st.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
 			st.setDouble(4, seller.getBaseSalary());
 			st.setInt(5, seller.getDepartment().getId());
-
 			int rowsAffected = st.executeUpdate();
-
 			if (rowsAffected > 0) {
 				var rs = st.getGeneratedKeys();
 				if (rs.next()) {
@@ -61,7 +60,6 @@ public class SellerRepository {
 		ResultSet rs = null;
 		List<Seller> list = new ArrayList<>();
 		String sql = "SELECT s.Id, s.Name AS SellerName, s.Email, s.BirthDate, s.BaseSalary, d.Id AS DepartmentId, d.Name AS DepartmentName FROM seller s JOIN department d ON s.DepartmentId = d.Id";
-
 		try {
 			st = conn.createStatement();
 			rs = st.executeQuery(sql);
@@ -103,7 +101,6 @@ public class SellerRepository {
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
 			}
-
 		} catch (SQLException e) {
 			throw new DbException("Error fetching seller by id: " + e.getMessage());
 		} finally {
@@ -112,7 +109,7 @@ public class SellerRepository {
 		}
 		return null;
 	}
-	
+
 	public void delete(int id) {
 		PreparedStatement st = null;
 		String sql = "DELETE FROM seller WHERE Id = ?";
@@ -124,8 +121,30 @@ public class SellerRepository {
 				throw new DbException("No rows affected. Id not found.");
 			}
 		} catch (SQLException e) {
-			//Already prepared in the case seller has FK in the future
+			// Already prepared in the case seller has FK in the future
 			throw new DbIntegrityException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
+	}
+
+	public void update(Seller seller) {
+		PreparedStatement st = null;
+		String sql = "UPDATE seller SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? WHERE Id = ?";
+		try {
+			st = conn.prepareStatement(sql);
+			st.setString(1, seller.getName());
+			st.setString(2, seller.getEmail());
+			st.setDate(3, Date.valueOf(seller.getBirthDate()));
+			st.setDouble(4, seller.getBaseSalary());
+			st.setInt(5, seller.getDepartment().getId());
+			st.setInt(6, seller.getId());
+			int rowsAffected = st.executeUpdate();
+			if (rowsAffected == 0) {
+				throw new DbException("Id not found.");
+			}
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
 		}

@@ -58,4 +58,8 @@ public class SellerService {
 	public void delete(int id) {
 		repository.delete(id);
 	}
+	
+	public void update(Seller seller) {
+	    repository.update(seller);
+	}
 }
