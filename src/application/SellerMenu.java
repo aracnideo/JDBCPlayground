@@ -65,11 +65,6 @@ public class SellerMenu {
 		}
 	}
 
-	private void waitForInput() {
-		System.out.println("Press Enter to continue...");
-		sc.nextLine();
-	}
-
 	private void insert() {
 		// Insert Seller
 		Connection conn = null;
@@ -101,7 +96,7 @@ public class SellerMenu {
 				int departmentId = InputUtils.readInt(sc, "Enter the department ID of the new seller: ");
 				department = departmentService.findById(departmentId);
 				if (department == null) {
-					System.out.println("Department ID not found. Please try again.");
+					System.out.println("Department Id not found. Please try again.");
 				}
 			}
 
@@ -111,8 +106,8 @@ public class SellerMenu {
 			SellerService service = new SellerService(repository);
 
 			service.insert(seller);
-			System.out.println("Inserted! New Id: " + seller.getId());
-			waitForInput();
+			System.out.println("Seller inserted successfully! New Id: " + seller.getId());
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -135,7 +130,7 @@ public class SellerMenu {
 				System.out.println(seller.toString());
 			}
 			System.out.println();
-			waitForInput();
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -160,7 +155,7 @@ public class SellerMenu {
 			} else {
 				System.out.println("Seller not found.");
 			}
-			waitForInput();
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {

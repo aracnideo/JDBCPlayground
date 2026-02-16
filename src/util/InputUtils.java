@@ -36,4 +36,9 @@ public class InputUtils {
 	        System.out.println("Input cannot be empty.");
 	    }
 	}
+	
+	public static void waitForEnter(Scanner sc) {
+	    System.out.println("Press Enter to continue...");
+	    sc.nextLine();
+	}
 }
