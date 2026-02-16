@@ -15,10 +15,16 @@ import util.InputUtils;
 public class DepartmentMenu {
 
 	Scanner sc;
+	private Connection conn;
+	private DepartmentRepository repository;
+	private DepartmentService service;
 
 	public DepartmentMenu(Scanner sc) {
 		super();
 		this.sc = sc;
+		this.conn = DB.getConnection();
+		this.repository = new DepartmentRepository(conn);
+		this.service = new DepartmentService(repository);
 	}
 
 	public void start() {
@@ -62,26 +68,19 @@ public class DepartmentMenu {
 				System.out.println("Invalid option");
 			}
 		}
+		DB.closeConnection();
 	}
 
 	private void insert() {
 		// Insert Department
 		String newName = InputUtils.readNonEmptyString(sc, "Enter the name of the new department: ");
-
-		Connection conn = null;
 		try {
-			conn = DB.getConnection();
-			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
-			DepartmentService departmentService = new DepartmentService(departmentRepository);
-
 			Department department = new Department(null, newName);
-			departmentService.insert(department);
+			service.insert(department);
 			System.out.println("Department inserted successfully! New Id: " + department.getId());
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
 		}
 	}
 
@@ -89,34 +88,20 @@ public class DepartmentMenu {
 		// Update Department
 		int id = InputUtils.readInt(sc, "Enter deparment Id: ");
 		String newName = InputUtils.readNonEmptyString(sc, "Enter new name for the department: ");
-
-		Connection conn = null;
 		try {
-			conn = DB.getConnection();
-			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
-			DepartmentService departmentService = new DepartmentService(departmentRepository);
-
 			Department department = new Department(id, newName);
-			departmentService.update(department);
+			service.update(department);
 			System.out.println("Department updated successfully.");
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
 		}
 	}
 
 	private void findAll() {
 		// FindAll Department
-		Connection conn = null;
 		try {
-			conn = DB.getConnection();
-			DepartmentRepository repository = new DepartmentRepository(conn);
-			DepartmentService service = new DepartmentService(repository);
-
 			List<Department> departments = service.findAll();
-
 			System.out.println("~~ Departments ~~");
 			for (Department department : departments) {
 				System.out.println(department.toString());
@@ -125,22 +110,14 @@ public class DepartmentMenu {
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
 		}
 	}
 
 	public void findById() {
 		// FindById Department
-		Connection conn = null;
 		int id = InputUtils.readInt(sc, "Enter deparment Id: ");
 		try {
-			conn = DB.getConnection();
-			DepartmentRepository repository = new DepartmentRepository(conn);
-			DepartmentService service = new DepartmentService(repository);
-
 			Department department = service.findById(id);
-
 			if (department != null) {
 				System.out.println("~~ Department Found ~~");
 				System.out.println(department.toString());
@@ -150,20 +127,13 @@ public class DepartmentMenu {
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
 		}
 	}
 
 	public void delete() {
 		// Delete Department
-		Connection conn = null;
 		int id = InputUtils.readInt(sc, "Enter deparment Id: ");
-
 		try {
-			conn = DB.getConnection();
-			DepartmentRepository repository = new DepartmentRepository(conn);
-			DepartmentService service = new DepartmentService(repository);
 			service.delete(id);
 			System.out.println("Department deleted successfully.");
 		} catch (DbIntegrityException e) {
@@ -171,8 +141,6 @@ public class DepartmentMenu {
 
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
 		}
 	}
 

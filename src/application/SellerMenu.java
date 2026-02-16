@@ -19,10 +19,20 @@ import util.InputUtils;
 public class SellerMenu {
 
 	Scanner sc;
+	private Connection conn;
+	private SellerRepository repository;
+	private SellerService service;
+	private DepartmentRepository departmentRepository;
+	private DepartmentService departmentService;
 
 	public SellerMenu(Scanner sc) {
 		super();
 		this.sc = sc;
+		this.conn = DB.getConnection();
+		this.repository = new SellerRepository(conn);
+		this.service = new SellerService(repository);
+		this.departmentRepository = new DepartmentRepository(conn);
+		this.departmentService = new DepartmentService(departmentRepository);
 	}
 
 	public void start() {
@@ -66,13 +76,12 @@ public class SellerMenu {
 				System.out.println("Invalid option");
 			}
 		}
+		DB.closeConnection();
 	}
 
 	private void insert() {
 		// Insert Seller
-		Connection conn = null;
 		try {
-			conn = DB.getConnection();
 			String name = InputUtils.readNonEmptyString(sc, "Enter the name of the new seller: ");
 			String email = InputUtils.readNonEmptyString(sc, "Enter the email of the new seller: ");
 			LocalDate birthDate = null;
@@ -89,8 +98,6 @@ public class SellerMenu {
 			}
 			double baseSalary = InputUtils.readDouble(sc, "Enter the base salary of the new seller: ");
 			Department department = null;
-			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
-			DepartmentService departmentService = new DepartmentService(departmentRepository);
 			while (department == null) {
 				int departmentId = InputUtils.readInt(sc, "Enter the department ID of the new seller: ");
 				department = departmentService.findById(departmentId);
@@ -99,25 +106,17 @@ public class SellerMenu {
 				}
 			}
 			Seller seller = new Seller(name, email, birthDate, baseSalary, department);
-			SellerRepository repository = new SellerRepository(conn);
-			SellerService service = new SellerService(repository);
 			service.insert(seller);
 			System.out.println("Seller inserted successfully! New Id: " + seller.getId());
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
-		}
+		} 
 	}
 
 	private void findAll() {
 		// FindAll Seller
-		Connection conn = null;
 		try {
-			conn = DB.getConnection();
-			SellerRepository repository = new SellerRepository(conn);
-			SellerService service = new SellerService(repository);
 			List<Seller> sellers = service.findAll();
 			System.out.println("~~ Sellers ~~");
 			for (Seller seller : sellers) {
@@ -127,19 +126,13 @@ public class SellerMenu {
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
-		}
+		} 
 	}
 
 	public void findById() {
 		// FindById Seller
-		Connection conn = null;
 		int id = InputUtils.readInt(sc, "Enter seller Id: ");
 		try {
-			conn = DB.getConnection();
-			SellerRepository repository = new SellerRepository(conn);
-			SellerService service = new SellerService(repository);
 			Seller seller = service.findById(id);
 			if (seller != null) {
 				System.out.println("~~ Seller Found ~~");
@@ -150,38 +143,26 @@ public class SellerMenu {
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
-		}
+		} 
 	}
 
 	public void delete() {
 		// Delete Seller
-		Connection conn = null;
 		int id = InputUtils.readInt(sc, "Enter seller Id: ");
 		try {
-			conn = DB.getConnection();
-			SellerRepository repository = new SellerRepository(conn);
-			SellerService service = new SellerService(repository);
 			service.delete(id);
 			System.out.println("Seller deleted successfully.");
 		} catch (DbIntegrityException e) {
 			System.out.println("Integrity error: " + e.getMessage());
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
-		}
+		} 
 	}
 
 	public void update() {
 		// Update Seller
-		Connection conn = null;
 		int id = InputUtils.readInt(sc, "Enter seller Id: ");
 		try {
-			conn = DB.getConnection();
-			SellerRepository repository = new SellerRepository(conn);
-			SellerService service = new SellerService(repository);
 			Seller seller = service.findById(id);
 			if (seller == null) {
 				System.out.println("Seller not found.");
@@ -215,7 +196,7 @@ public class SellerMenu {
 				break;
 			case 5:
 				int departmentId = InputUtils.readInt(sc, "Enter new department Id: ");
-				Department department = new DepartmentRepository(conn).findById(departmentId);
+				Department department = departmentService.findById(departmentId);
 				if (department == null) {
 					System.out.println("Department not found.");
 					return;
@@ -230,8 +211,6 @@ public class SellerMenu {
 			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
-		} finally {
-			DB.closeConnection();
-		}
+		} 
 	}
 }
