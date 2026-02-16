@@ -1,7 +1,7 @@
-# Java JDBC Project
+# JDBC Project
 
 This project was developed as part of my studies in Java Database Connectivity (JDBC).  
-It will demonstrate a complete CRUD implementation using Java and MySQL, following clean architecture principles.
+It demonstrates a complete CRUD implementation using Java and MySQL, following clean architecture principles.
 
 ## Project Goals
 
