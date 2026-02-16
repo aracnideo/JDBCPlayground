@@ -41,7 +41,6 @@ public class SellerService {
 			throw new IllegalArgumentException(
 					"Seller base salary must be at least equal to the national minimum salary.");
 		}
-		//Precisaria fazer um find by Id aqui, pra garantir que o Department existe.
 		if (seller.getDepartment() == null || seller.getDepartment().getId() == null) {
 			throw new IllegalArgumentException("Seller must be associated with a valid department.");
 		}
@@ -54,5 +53,9 @@ public class SellerService {
 
 	public Seller findById(int id) {
 		return repository.findById(id);
+	}
+	
+	public void delete(int id) {
+		repository.delete(id);
 	}
 }

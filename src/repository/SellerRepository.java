@@ -11,6 +11,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -110,5 +111,23 @@ public class SellerRepository {
 			DB.closeResultSet(rs);
 		}
 		return null;
+	}
+	
+	public void delete(int id) {
+		PreparedStatement st = null;
+		String sql = "DELETE FROM seller WHERE Id = ?";
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, id);
+			int rowsAffected = st.executeUpdate();
+			if (rowsAffected == 0) {
+				throw new DbException("No rows affected. Id not found.");
+			}
+		} catch (SQLException e) {
+			//Already prepared in the case seller has FK in the future
+			throw new DbIntegrityException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 }

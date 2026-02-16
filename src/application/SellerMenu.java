@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.entities.Department;
 import model.entities.Seller;
 import repository.DepartmentRepository;
@@ -164,6 +165,21 @@ public class SellerMenu {
 	}
 
 	public void delete() {
-
+		// Delete Seller
+		Connection conn = null;
+		int id = InputUtils.readInt(sc, "Enter seller Id: ");
+		try {
+			conn = DB.getConnection();
+			SellerRepository repository = new SellerRepository(conn);
+			SellerService service = new SellerService(repository);
+			service.delete(id);
+			System.out.println("Seller deleted successfully.");
+		} catch (DbIntegrityException e) {
+			System.out.println("Integrity error: " + e.getMessage());
+		} catch (DbException e) {
+			System.out.println("Database error: " + e.getMessage());
+		} finally {
+			DB.closeConnection();
+		}
 	}
 }
