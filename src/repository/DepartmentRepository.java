@@ -10,6 +10,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.entities.Department;
 
 public class DepartmentRepository {
@@ -115,4 +116,22 @@ public class DepartmentRepository {
 		}
 		return null;
 	}
+
+	public void delete(int id) {
+		PreparedStatement st = null;
+		String sql = "DELETE FROM department WHERE Id = ?";
+		try {
+			st = conn.prepareStatement(sql);
+			st.setInt(1, id);
+			int rowsAffected = st.executeUpdate();
+			if (rowsAffected == 0) {
+				throw new SQLException("No rows affected. Id not found exist.");
+			}
+		} catch (SQLException e) {
+			throw new DbIntegrityException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
+	}
+
 }

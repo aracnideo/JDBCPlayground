@@ -39,4 +39,8 @@ public class DepartmentService {
 		return repository.findById(id);
 	}
 
+	public void delete(int id) {
+		repository.delete(id);
+	}
+
 }

@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.entities.Department;
 import repository.DepartmentRepository;
 import service.DepartmentService;
@@ -63,11 +64,6 @@ public class DepartmentMenu {
 		}
 	}
 
-	private void waitForInput() {
-		System.out.println("Press Enter to continue...");
-		sc.nextLine();
-	}
-
 	private void insert() {
 		// Insert Department
 		String newName = InputUtils.readNonEmptyString(sc, "Enter the name of the new department: ");
@@ -80,8 +76,8 @@ public class DepartmentMenu {
 
 			Department department = new Department(null, newName);
 			departmentService.insert(department);
-			System.out.println("Inserted! New Id: " + department.getId());
-			waitForInput();
+			System.out.println("Department inserted successfully! New Id: " + department.getId());
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -102,8 +98,8 @@ public class DepartmentMenu {
 
 			Department department = new Department(id, newName);
 			departmentService.update(department);
-			System.out.println("Updated completed");
-			waitForInput();
+			System.out.println("Department updated successfully.");
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -126,7 +122,7 @@ public class DepartmentMenu {
 				System.out.println(department.toString());
 			}
 			System.out.println();
-			waitForInput();
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -151,7 +147,7 @@ public class DepartmentMenu {
 			} else {
 				System.out.println("Department not found.");
 			}
-			waitForInput();
+			InputUtils.waitForEnter(sc);
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
 		} finally {
@@ -168,7 +164,10 @@ public class DepartmentMenu {
 			conn = DB.getConnection();
 			DepartmentRepository departmentRepository = new DepartmentRepository(conn);
 			DepartmentService departmentService = new DepartmentService(departmentRepository);
-//			departmentService.delete(id);
+			departmentService.delete(id);
+			System.out.println("Department deleted successfully.");
+		} catch (DbIntegrityException e) {
+			System.out.println("Cannot delete department: it has associated sellers.");
 
 		} catch (DbException e) {
 			System.out.println("Database error: " + e.getMessage());
