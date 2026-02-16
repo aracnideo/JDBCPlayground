@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
-
-import db.DB;
 import db.DbException;
 import db.DbIntegrityException;
 import model.entities.Department;
@@ -18,17 +16,15 @@ import util.InputUtils;
 
 public class SellerMenu {
 
-	Scanner sc;
-	private Connection conn;
+	private Scanner sc;
 	private SellerRepository repository;
 	private SellerService service;
 	private DepartmentRepository departmentRepository;
 	private DepartmentService departmentService;
 
-	public SellerMenu(Scanner sc) {
+	public SellerMenu(Scanner sc, Connection conn) {
 		super();
 		this.sc = sc;
-		this.conn = DB.getConnection();
 		this.repository = new SellerRepository(conn);
 		this.service = new SellerService(repository);
 		this.departmentRepository = new DepartmentRepository(conn);
@@ -76,7 +72,6 @@ public class SellerMenu {
 				System.out.println("Invalid option");
 			}
 		}
-		DB.closeConnection();
 	}
 
 	private void insert() {

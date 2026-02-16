@@ -3,8 +3,6 @@ package application;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Scanner;
-
-import db.DB;
 import db.DbException;
 import db.DbIntegrityException;
 import model.entities.Department;
@@ -14,15 +12,13 @@ import util.InputUtils;
 
 public class DepartmentMenu {
 
-	Scanner sc;
-	private Connection conn;
+	private Scanner sc;
 	private DepartmentRepository repository;
 	private DepartmentService service;
 
-	public DepartmentMenu(Scanner sc) {
+	public DepartmentMenu(Scanner sc, Connection conn) {
 		super();
 		this.sc = sc;
-		this.conn = DB.getConnection();
 		this.repository = new DepartmentRepository(conn);
 		this.service = new DepartmentService(repository);
 	}
@@ -68,7 +64,6 @@ public class DepartmentMenu {
 				System.out.println("Invalid option");
 			}
 		}
-		DB.closeConnection();
 	}
 
 	private void insert() {
